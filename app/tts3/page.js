@@ -104,8 +104,8 @@ export default function TextToSpeech() {
           onChange={handleLanguageChange}
         >
           <option value="">Select Language</option>
-          {availableLanguages.map((lang, index) => (
-            <option key={index} value={lang}>
+          {availableLanguages.map((lang) => (
+            <option key={lang} value={lang}>
               {lang}
             </option>
           ))}

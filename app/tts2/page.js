@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 
 export default function TextToSpeech() {
@@ -11,9 +10,6 @@ export default function TextToSpeech() {
   const [availableLanguages, setAvailableLanguages] = useState([]);
   const [characterCount, setCharacterCount] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [pitch, setPitch] = useState(1);
-  const [rate, setRate] = useState(1);
-  const [volume, setVolume] = useState(1);
 
   const handleTextChange = (event) => {
     const newText = event.target.value;
@@ -24,21 +20,6 @@ export default function TextToSpeech() {
 
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
-  };
-
-  const handlePitchChange = (event) => {
-    const newPitch = parseFloat(event.target.value);
-    setPitch(newPitch);
-  };
-
-  const handleRateChange = (event) => {
-    const newRate = parseFloat(event.target.value);
-    setRate(newRate);
-  };
-
-  const handleVolumeChange = (event) => {
-    const newVolume = parseFloat(event.target.value);
-    setVolume(newVolume);
   };
 
   const calculateDuration = (text) => {
@@ -57,10 +38,8 @@ export default function TextToSpeech() {
         const synthesis = window.speechSynthesis;
 
         const utterance = new SpeechSynthesisUtterance(text);
+        console.log(utterance, "utterance");
         utterance.lang = language;
-        utterance.pitch = pitch;
-        utterance.rate = rate;
-        utterance.volume = volume;
         synthesis.speak(utterance);
         synthesisRef.current = synthesis;
       }
@@ -73,6 +52,7 @@ export default function TextToSpeech() {
       const synthesis = window.speechSynthesis;
       const updateVoices = () => {
         const voices = synthesis.getVoices();
+
         setAvailableLanguages(voices.map((voice) => voice.lang));
       };
 
@@ -86,9 +66,9 @@ export default function TextToSpeech() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen">
       <textarea
-        className="w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 xl:w-4/12 h-32 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+        className="w-1/2 h-32 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
         value={text}
         onChange={handleTextChange}
         placeholder="Enter text"
@@ -97,64 +77,20 @@ export default function TextToSpeech() {
         Character Count: {characterCount}
       </div>
       <div className="mt-2 text-gray-600">Duration: {duration} seconds</div>
-      <div className="mt-4 w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
+      <div className="mt-4">
         <select
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
           value={language}
           onChange={handleLanguageChange}
         >
           <option value="">Select Language</option>
+
           {availableLanguages.map((lang, index) => (
             <option key={index} value={lang}>
               {lang}
             </option>
           ))}
         </select>
-      </div>
-      <div className="mt-4 w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
-        <label htmlFor="pitchSlider" className="mr-2 text-gray-600">
-          Pitch: {pitch.toFixed(1)}
-        </label>
-        <input
-          id="pitchSlider"
-          type="range"
-          min="0.5"
-          max="2"
-          step="0.1"
-          value={pitch}
-          onChange={handlePitchChange}
-          className="w-full"
-        />
-      </div>
-      <div className="mt-4 w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
-        <label htmlFor="rateSlider" className="mr-2 text-gray-600">
-          Rate: {rate.toFixed(1)}
-        </label>
-        <input
-          id="rateSlider"
-          type="range"
-          min="0.5"
-          max="2"
-          step="0.1"
-          value={rate}
-          onChange={handleRateChange}
-          className="w-full"
-        />
-      </div>
-      <div className="mt-4 w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
-        <label htmlFor="volumeSlider" className="mr-2 text-gray-600">
-          Volume: {volume.toFixed(1)}
-        </label>
-        <input
-          id="volumeSlider"
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="w-full"
-        />
       </div>
       <div className="mt-4">
         <button
